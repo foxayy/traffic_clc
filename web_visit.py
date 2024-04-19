@@ -44,17 +44,55 @@ def read_website_list(filename):
     with open(filename, 'r') as file:
         website_list = file.readlines()
     return [url.strip() for url in website_list if url.strip()]
-    
+
+def get_chrome_driver():
+    return webdriver.Chrome()
+
+def get_firefox_driver():
+    return webdriver.Firefox()
+
+def get_edge_driver():
+    return webdriver.Edge()
+
 def main():
+
+    drv_mapping = {
+        "1": get_chrome_driver,
+        "2": get_firefox_driver,
+        "3": get_edge_driver
+    }
+
+    print("please choose browse driver: ")
+    print("1. chrome")
+    print("2. firefox")
+    print("3. edge")
+
+    drv_choice = input()
+    if drv_choice not in drv_mapping:
+        print("Invalid choice!")
+        return
+
     websites = read_website_list("websites.txt")
-    
-    for website in websites:
-        
-        driver = webdriver.Edge()
-        driver.set_window_size(1920, 1080)
-        visit_website(driver, website)
-        driver.quit()
-        
+    websites_len = len(websites)
+
+    total_loop = 100
+    cur_loop = 0
+    idx = 0
+
+    while True:
+
+        for _ in range(websites_len):
+            driver = drv_mapping[drv_choice]()
+            driver.set_window_size(1920, 1080)
+            visit_website(driver, websites[idx])
+            driver.quit()
+            idx = (idx + 1) % websites_len
+
+        cur_loop += 1
+        if cur_loop == total_loop:
+            break
+        print("have visit all the website, start round " + cur_loop + "...")
+
     print("process done!")
 
     
