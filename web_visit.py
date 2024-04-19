@@ -91,7 +91,7 @@ def main():
         cur_loop += 1
         if cur_loop == total_loop:
             break
-        print("have visit all the website, start round " + cur_loop + "...")
+        print(f"have visit all the website, start round {cur_loop + 1}...")
 
     print("process done!")
 
